@@ -1,0 +1,16 @@
+
+# README
+
+Automatically Sets up and Configures a new Linux PC
+
+## Directions
+1. Create creds.bash in the root of the repo and fill it with this template
+```
+#!/bin/bash
+export GIT_USER_EMAIL="[email]"
+export GIT_USER_NAME="[username]"
+export GIT_USER_TOKEN="[api token]"
+```
+
+2. run `./run`
+3. rerun `./run` to finish the setup

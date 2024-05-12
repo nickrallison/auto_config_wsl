@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# If $USER is root then die
+if [ "$USER" = "root" ]; then
+    echo "Please run this script as a non-root user."
+    exit 1
+fi
+
+source ./creds.bash
+
+# For Ubuntu / Debian
+if [ -f ${HOME}/user.zshrc ]; then
+
+    # Configure git
+    cd ${HOME}
+    mkdir -p ${HOME}/Downloads
+    mkdir -p ${HOME}/Applications
+    rm -rf ${HOME}/.config
+
+    git config --global user.email "$GIT_USER_EMAIL"
+    git config --global user.name "$GIT_USER_NAME"
+    git config --global user.password "$GIT_USER_TOKEN"
+
+    # Download .config
+    cd ${HOME}
+    git clone https://github.com/nickrallison/.config.git .config
+
+    # Install Python3
+    sudo apt-get install -y python3
+
+    # Install Python3-pip
+    sudo apt-get install -y python3-pip
+
+    # Install Python-is-Python3
+    sudo apt-get install -y python-is-python3
+
+    # Install Rust
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
+    # Install tmux
+    sudo apt-get install -y tmux
+
+    # Install tree
+    sudo apt-get install -y tree
+
+    # Install CMake
+    sudo apt install cmake
+
+    # Install Helix
+    cd ${HOME}/Applications
+    git clone https://github.com/helix-editor/helix
+    cd helix
+    cargo install --path helix-term --locked
+    ln -Ts ${HOME}/Applications/helix/runtime ${HOME}/.config/helix/runtime
+     
+    # Install Starship Prompt
+    cargo install starship --locked
+    echo 'eval "$(starship init zsh)"' >> ${HOME}/.zshrc
+
+    # Install RipGrep
+    cargo install ripgrep
+
+else 
+    sudo apt-get update
+    sudo apt-get install -y zsh
+    chsh -s /usr/bin/zsh $USER
+    touch ${HOME}/user.zshrc
+    echo "# --------------------------------------------" >> ${HOME}/.zshrc
+    rm -f ${HOME}/.zshrc
+    echo "source ${HOME}/user.zshrc" >> ${HOME}/.zshrc
+    echo "Please Exit your shell session(s) and re-run the script to complete the installation."
+fi
