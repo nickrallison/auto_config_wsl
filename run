@@ -6,6 +6,14 @@ if [ "$USER" = "root" ]; then
     exit 1
 fi
 
+if [ ! -f creds.bash ]; then
+    echo "Please create a creds.bash file with the following variables:"
+    echo "export GIT_USER_EMAIL=\"<your-email>\""
+    echo "export GIT_USER_NAME=\"<your-name>\""
+    echo "exprot GIT_USER_TOKEN=\"<your-token>\""
+    exit 1
+fi
+
 source ./creds.bash
 
 # For Ubuntu / Debian
